@@ -1,13 +1,8 @@
-# kmeans_from_scratch_with_prints.py
-# -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import random
 
-# ------------------------------------------------------
-# 1️⃣ Define the points
-# ------------------------------------------------------
 points_data = [
     {"point": "A1", "X": 2, "Y": 10},
     {"point": "A2", "X": 2, "Y": 5},
@@ -23,24 +18,23 @@ df = pd.DataFrame(points_data)
 X = df[["X", "Y"]].values
 print("Initial points:\n", df, "\n")
 
-# ------------------------------------------------------
-# 2️⃣ Initialize K-Means parameters
-# ------------------------------------------------------
-k = 3  # number of clusters (you can change this)
+k = 3
 random.seed(42)
-initial_centroids = np.array([
-    df[df["point"] == "A1"][["X", "Y"]].values[0],
-    df[df["point"] == "A4"][["X", "Y"]].values[0],
-    df[df["point"] == "A7"][["X", "Y"]].values[0],
-])
+initial_centroids = np.array(
+    [
+        df[df["point"] == "A1"][["X", "Y"]].values[0],
+        df[df["point"] == "A4"][["X", "Y"]].values[0],
+        df[df["point"] == "A7"][["X", "Y"]].values[0],
+    ]
+)
 
 centroids = np.array(initial_centroids)
 print(f"Initial centroids (A1, A4, A7):\n{centroids}\n")
-# ------------------------------------------------------
-# 3️⃣ K-Means algorithm (manual loop)
-# ------------------------------------------------------
+
+
 def euclidean_distance(a, b):
     return np.sqrt(np.sum((a - b) ** 2))
+
 
 def assign_clusters(X, centroids):
     clusters = []
@@ -50,6 +44,7 @@ def assign_clusters(X, centroids):
         clusters.append(cluster_idx)
     return np.array(clusters)
 
+
 def compute_centroids(X, clusters, k):
     new_centroids = []
     for i in range(k):
@@ -57,9 +52,9 @@ def compute_centroids(X, clusters, k):
         if len(points_in_cluster) > 0:
             new_centroids.append(points_in_cluster.mean(axis=0))
         else:
-            # empty cluster (rare case)
             new_centroids.append(random.choice(X))
     return np.array(new_centroids)
+
 
 max_iters = 10
 for iteration in range(max_iters):
@@ -68,28 +63,34 @@ for iteration in range(max_iters):
     print(f"Iteration {iteration+1}:")
     print(" -> Cluster assignments:", clusters)
     print(" -> Centroids:\n", new_centroids, "\n")
+
     if np.allclose(centroids, new_centroids):
         print("Converged!\n")
         break
+
     centroids = new_centroids
 
 df["Cluster"] = clusters
 print("Final DataFrame with cluster assignments:\n", df, "\n")
 
-# ------------------------------------------------------
-# 4️⃣ Visualization
-# ------------------------------------------------------
 plt.figure(figsize=(7, 5))
 colors = ["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple"]
 
 for i in range(k):
     subset = df[df["Cluster"] == i]
-    plt.scatter(subset["X"], subset["Y"], color=colors[i % len(colors)], s=80, edgecolor="k", label=f"Cluster {i+1}")
+    plt.scatter(
+        subset["X"],
+        subset["Y"],
+        color=colors[i % len(colors)],
+        s=80,
+        edgecolor="k",
+        label=f"Cluster {i+1}",
+    )
 
-# Plot centroids
-plt.scatter(centroids[:, 0], centroids[:, 1], c="black", s=200, marker="X", label="Centroids")
+plt.scatter(
+    centroids[:, 0], centroids[:, 1], c="black", s=200, marker="X", label="Centroids"
+)
 
-# Label each point
 for _, row in df.iterrows():
     plt.text(row["X"] + 0.1, row["Y"] + 0.1, row["point"], fontsize=9)
 
