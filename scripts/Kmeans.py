@@ -28,10 +28,14 @@ print("Initial points:\n", df, "\n")
 # ------------------------------------------------------
 k = 3  # number of clusters (you can change this)
 random.seed(42)
-initial_centroids = random.sample(list(X), k)
-centroids = np.array(initial_centroids)
-print(f"Initial centroids (randomly chosen from data):\n{centroids}\n")
+initial_centroids = np.array([
+    df[df["point"] == "A1"][["X", "Y"]].values[0],
+    df[df["point"] == "A4"][["X", "Y"]].values[0],
+    df[df["point"] == "A7"][["X", "Y"]].values[0],
+])
 
+centroids = np.array(initial_centroids)
+print(f"Initial centroids (A1, A4, A7):\n{centroids}\n")
 # ------------------------------------------------------
 # 3️⃣ K-Means algorithm (manual loop)
 # ------------------------------------------------------

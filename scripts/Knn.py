@@ -67,8 +67,7 @@ def final_decision(top3):
 # 4️⃣ Classify unlabeled points iteratively
 # ------------------------------------------------------
 unlabeled_points = df[df["category"].isna()]["point"].tolist()
-random.shuffle(unlabeled_points)
-print("Unlabeled points (random order):", unlabeled_points, "\n")
+print("Unlabeled points (in order):", unlabeled_points, "\n")
 
 for point in unlabeled_points:
     print(f"\n----- Point {point} -----")
